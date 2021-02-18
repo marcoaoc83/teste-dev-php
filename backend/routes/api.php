@@ -24,6 +24,6 @@ Route::get('version', function () {
 Route::namespace('App\\Http\\Controllers')->group(function () {
     Route::apiResources([
         'carros' => 'CarroController',
-
+        'marcas' => 'MarcaController',
     ]);
 });

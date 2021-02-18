@@ -61,11 +61,11 @@
                 <div class="form-group">
 
                   <label>Marca</label>
-                  <select class="form-control" v-model="form.marca_id">
+                  <select class="form-control" v-model="form.marca_id"  name="marca_id">
                     <option
-                      v-for="(nome,index) in marcas" :key="index"
-                      :value="index"
-                      :selected="index == form.marca_id">{{ nome }}</option>
+                      v-for="(campo,index) in marcas" :key="index"
+                      :value="campo.id"
+                      :selected="campo.id == form.marca.id">{{ campo.descricao }}</option>
                   </select>
                   <has-error :form="form" field="marca_id"></has-error>
                 </div>
@@ -104,6 +104,7 @@ export default {
       form: new Form({
         id : '',
         marca : '',
+        marca_id : '',
         modelo: '',
         ano: ''
       }),
@@ -129,7 +130,7 @@ export default {
       // }
     },
     loadMarcas(){
-      axios.get(this.$API_URL+"/api/marca/list").then(({ data }) => (this.marcas = data.data));
+      axios.get(this.$API_URL+"api/marcas").then(({ data }) => (this.marcas = data.data));
     },
 
     editModal(carro){
@@ -146,8 +147,9 @@ export default {
     createCarro(){
       this.$Progress.start();
 
-      this.form.post('api/carros')
+      this.form.post(this.$API_URL+'api/carros')
         .then((data)=>{
+
           if(data.data.success){
             this.$refs['addNew'].hide()
 
@@ -159,9 +161,11 @@ export default {
             this.loadCarros();
 
           } else {
+            console.log(data.data);
+            this.$error_reponse=data.data.response.message;
             Toast.fire({
               icon: 'error',
-              title: 'Some error occured! Please try again'
+              title: data.data.response.message
             });
 
             this.$Progress.failed();
@@ -171,13 +175,13 @@ export default {
 
           Toast.fire({
             icon: 'error',
-            title: 'Some error occured! Please try again'
+            title: this.$error_reponse
           });
         })
     },
     updateCarro(){
       this.$Progress.start();
-      this.form.put('api/carros/'+this.form.id)
+      this.form.put(this.$API_URL+'api/carros/'+this.form.id)
         .then((response) => {
           // success
           this.$refs['addNew'].hide()
@@ -197,20 +201,20 @@ export default {
     },
     deleteCarro(id){
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Você tem certeza?',
+        text: "Não será possivel reverter!",
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Sim!'
       }).then((result) => {
 
         // Send request to the server
         if (result.value) {
-          this.form.delete('api/carros/'+id).then(()=>{
+          this.form.delete(this.$API_URL+'api/carros/'+id).then(()=>{
             Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
+              'Delete!',
+              'Deletado com sucesso.',
               'success'
             );
             // Fire.$emit('AfterCreate');
@@ -230,7 +234,7 @@ export default {
     this.$Progress.start();
 
     this.loadCarros();
-    //this.loadMarcas();
+    this.loadMarcas();
 
     this.$Progress.finish();
   },

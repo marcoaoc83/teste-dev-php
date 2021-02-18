@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MarcaRequest;
 use App\Models\Marca;
+use Faker\Provider\Base;
 use Illuminate\Http\Request;
 
-class MarcaController extends Controller
+class MarcaController extends BaseController
 {
+    protected $marcas = '';
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(Marca $marcas)
+    {
+        $this->marcas = $marcas;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +26,8 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $marcas =  $this->marcas::all();
+        return $this->sendResponse($marcas, 'Lista de marcas');
     }
 
     /**
@@ -33,9 +36,12 @@ class MarcaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MarcaRequest $request)
     {
-        //
+
+        $resp= $this->marcas->create($request->all());
+
+        return $this->sendResponse($resp, 'Marca inserida com sucesso!');
     }
 
     /**
@@ -44,21 +50,12 @@ class MarcaController extends Controller
      * @param  \App\Models\Marca  $marca
      * @return \Illuminate\Http\Response
      */
-    public function show(Marca $marca)
+    public function show($marca)
     {
-        //
+        $marcas =  $this->marcas::findOrFail($marca);
+        return $this->sendResponse($marcas, 'Info de marca');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Marca  $marca
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Marca $marca)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -67,19 +64,25 @@ class MarcaController extends Controller
      * @param  \App\Models\Marca  $marca
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Marca $marca)
+    public function update(MarcaRequest $request,$marca)
     {
-        //
+        $marca = $this->marcas->findOrFail($marca);
+        $resp= $marca->update($request->all());
+
+        return $this->sendResponse($resp, 'Marca editada com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Marca  $marca
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Marca $marca)
+    public function destroy( $marca)
     {
-        //
+        $marca = $this->marcas->findOrFail($marca);
+        $resp= $marca->delete();
+
+        return $this->sendResponse($resp, 'Marca deletada com sucesso!');
     }
+
 }

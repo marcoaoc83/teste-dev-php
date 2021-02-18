@@ -28,7 +28,7 @@ Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 Vue.component('pagination', require('laravel-vue-pagination'));
 
-Vue.prototype.$API_URL='http://127.0.0.1:80/';
+Vue.prototype.$API_URL='http://localhost/';
 
 
 import Swal from 'sweetalert2';

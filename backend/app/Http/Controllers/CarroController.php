@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CarroRequest;
 use App\Models\Carro;
 use Illuminate\Http\Request;
 
@@ -30,15 +31,6 @@ class CarroController extends BaseController
         return $this->sendResponse($carros, 'Lista de Carros');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -46,9 +38,12 @@ class CarroController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CarroRequest $request)
     {
-        //
+
+        $resp= $this->carro->create($request->all());
+
+        return $this->sendResponse($resp, 'Carro inserido com sucesso!');
     }
 
     /**
@@ -59,19 +54,10 @@ class CarroController extends BaseController
      */
     public function show(Carro $carro)
     {
-        //
+        $carro =  $this->carro::findOrFail($carro);
+        return $this->sendResponse($carro, 'Info do carro');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Carro  $carro
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Carro $carro)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -80,9 +66,12 @@ class CarroController extends BaseController
      * @param  \App\Models\Carro  $carro
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Carro $carro)
+    public function update(CarroRequest $request, $carro)
     {
-        //
+        $carro = $this->carro->findOrFail($carro);
+        $resp= $carro->update($request->all());
+
+        return $this->sendResponse($resp, 'Carro editada com sucesso!');
     }
 
     /**
@@ -91,8 +80,11 @@ class CarroController extends BaseController
      * @param  \App\Models\Carro  $carro
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Carro $carro)
+    public function destroy( $carro)
     {
-        //
+        $carro = $this->carro->findOrFail($carro);
+        $resp= $carro->delete();
+
+        return $this->sendResponse($resp, 'carro deletado com sucesso!');
     }
 }
