@@ -79,7 +79,7 @@ class CarroRequest extends FormRequest
             'modelo.max'               =>'Máximo 191 caracteres',
 
             'ano.required'       =>'Ano é obrigatório',
-            'ano.max'            =>'Máximo 4 caracteres',
+            'ano.max'            =>'Ano é de no Máximo 4 caracteres',
 
 
         ];

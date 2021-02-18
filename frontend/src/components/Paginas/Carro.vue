@@ -182,21 +182,36 @@ export default {
     updateCarro(){
       this.$Progress.start();
       this.form.put(this.$API_URL+'api/carros/'+this.form.id)
-        .then((response) => {
-          // success
-          this.$refs['addNew'].hide()
-          Toast.fire({
-            icon: 'success',
-            title: response.data.message
-          });
-          this.$Progress.finish();
-          //  Fire.$emit('AfterCreate');
+        .then((data)=>{
 
-          this.loadCarros();
+          if(data.data.success){
+            this.$refs['addNew'].hide()
+
+            Toast.fire({
+              icon: 'success',
+              title: data.data.message
+            });
+            this.$Progress.finish();
+            this.loadCarros();
+
+          } else {
+            console.log(data.data);
+            this.$error_reponse=data.data.response.message;
+            Toast.fire({
+              icon: 'error',
+              title: data.data.response.message
+            });
+
+            this.$Progress.failed();
+          }
         })
-        .catch(() => {
-          this.$Progress.fail();
-        });
+        .catch(()=>{
+
+          Toast.fire({
+            icon: 'error',
+            title: this.$error_reponse
+          });
+        })
 
     },
     deleteCarro(id){
