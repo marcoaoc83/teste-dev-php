@@ -5,6 +5,9 @@
 ## Build Setup
 
 ``` bash
+#API_URL configurar url da api
+src/main.js  linha 31
+
 # install dependencies
 npm install
 
